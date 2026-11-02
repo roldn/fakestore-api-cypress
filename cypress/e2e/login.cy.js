@@ -1,10 +1,18 @@
-import { RESPUESTA_LOGIN, validarEsquema } from '../support/esquemas';
+import { validarEsquema } from '../support/validaciones';
 
 describe('Login', () => {
+  let esquemas;
+
+  before(() => {
+    cy.fixture('esquemas').then((contenido) => {
+      esquemas = contenido;
+    });
+  });
+
   it('devuelve un token con credenciales válidas', () => {
     cy.login().then(({ status, body }) => {
       expect(status).to.eq(200);
-      validarEsquema(body, RESPUESTA_LOGIN);
+      validarEsquema(body, esquemas.respuestaLogin);
     });
   });
 
