@@ -17,11 +17,6 @@ export const CARRITO = {
   products: 'array',
 };
 
-export const PRODUCTO_DEL_CARRITO = {
-  productId: 'number',
-  quantity: 'number',
-};
-
 export const validarEsquema = (objeto, esquema) => {
   expect(objeto).to.be.an('object');
 

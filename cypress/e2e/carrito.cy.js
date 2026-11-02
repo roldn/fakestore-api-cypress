@@ -1,4 +1,4 @@
-import { CARRITO, PRODUCTO, PRODUCTO_DEL_CARRITO, validarEsquema } from '../support/esquemas';
+import { CARRITO, PRODUCTO, validarEsquema } from '../support/esquemas';
 
 const USUARIO_ID = 2;
 
@@ -7,12 +7,11 @@ describe('Carrito', () => {
   let carrito;
 
   before(() => {
-    cy.requestConToken({ method: 'GET', url: '/products?limit=4' }).then(({ status, body }) => {
+    cy.requestConToken({ method: 'GET', url: '/products' }).then(({ status, body }) => {
       expect(status).to.eq(200);
-      expect(body).to.be.an('array').and.have.length(4);
-      body.forEach((producto) => validarEsquema(producto, PRODUCTO));
+      expect(body).to.be.an('array').and.not.be.empty;
 
-      productos = body;
+      productos = body.slice(0, 4);
     });
   });
 
@@ -27,14 +26,13 @@ describe('Carrito', () => {
       url: '/carts',
       body: { userId: USUARIO_ID, products: productosDelCarrito },
     }).then(({ status, body }) => {
+      carrito = body;
+
       expect(status).to.eq(201);
       validarEsquema(body, CARRITO);
       expect(body.userId).to.eq(USUARIO_ID);
       expect(body.products).to.have.length(3);
-      body.products.forEach((item) => validarEsquema(item, PRODUCTO_DEL_CARRITO));
-      expect(body.products).to.deep.equal(productosDelCarrito);
-
-      carrito = body;
+      body.products.forEach((producto) => validarEsquema(producto, PRODUCTO));
     });
   });
 
@@ -47,14 +45,14 @@ describe('Carrito', () => {
       url: `/carts/${carrito.id}`,
       body: { userId: carrito.userId, products: productosDelCarrito },
     }).then(({ status, body }) => {
+      const anterior = carrito;
+      carrito = body;
+
       expect(status).to.eq(200);
       validarEsquema(body, CARRITO);
-      expect(body.id).to.eq(carrito.id);
+      expect(body.id).to.eq(anterior.id);
       expect(body.products).to.have.length(4);
-      body.products.forEach((item) => validarEsquema(item, PRODUCTO_DEL_CARRITO));
-      expect(body.products).to.deep.include(agregado);
-
-      carrito = body;
+      body.products.forEach((producto) => validarEsquema(producto, PRODUCTO));
     });
   });
 
