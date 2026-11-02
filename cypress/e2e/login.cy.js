@@ -1,9 +1,11 @@
+import { RESPUESTA_LOGIN, validarEsquema } from '../support/esquemas';
+
 describe('Login', () => {
   it('devuelve un token con credenciales válidas', () => {
     cy.login().then(({ status, body }) => {
       expect(status).to.eq(201);
-      expect(body).to.have.property('token');
-      expect(body.token).to.be.a('string').and.not.be.empty;
+      validarEsquema(body, RESPUESTA_LOGIN);
+      expect(body.token).to.not.be.empty;
       expect(body.token.split('.')).to.have.length(3);
     });
   });
