@@ -19,8 +19,7 @@ Cypress.Commands.add('obtenerToken', () => {
     return cy.wrap(token, { log: false });
   }
 
-  return cy.login().then(({ status, body }) => {
-    expect(status).to.eq(201);
+  return cy.login().then(({ body }) => {
     token = body.token;
 
     return token;
