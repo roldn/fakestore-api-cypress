@@ -2,5 +2,12 @@
   "name": "fakestore-api-cypress",
   "version": "1.0.0",
   "description": "Pruebas de API de Fake Store API con Cypress",
-  "private": true
+  "private": true,
+  "scripts": {
+    "test": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^16.2.1"
+  }
 }
