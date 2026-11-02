@@ -2,6 +2,26 @@ export const RESPUESTA_LOGIN = {
   token: 'string',
 };
 
+export const PRODUCTO = {
+  id: 'number',
+  title: 'string',
+  price: 'number',
+  description: 'string',
+  category: 'string',
+  image: 'string',
+};
+
+export const CARRITO = {
+  id: 'number',
+  userId: 'number',
+  products: 'array',
+};
+
+export const PRODUCTO_DEL_CARRITO = {
+  productId: 'number',
+  quantity: 'number',
+};
+
 export const validarEsquema = (objeto, esquema) => {
   expect(objeto).to.be.an('object');
 
