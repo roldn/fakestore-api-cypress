@@ -1,0 +1,6 @@
+{
+  "name": "fakestore-api-cypress",
+  "version": "1.0.0",
+  "description": "Pruebas de API de Fake Store API con Cypress",
+  "private": true
+}
