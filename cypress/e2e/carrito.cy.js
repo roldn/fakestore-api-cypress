@@ -6,6 +6,7 @@ describe('Carrito', () => {
   let esquemas;
   let productos;
   let carrito;
+  let respuestaEliminacion;
 
   before(() => {
     cy.fixture('esquemas').then((contenido) => {
@@ -61,9 +62,26 @@ describe('Carrito', () => {
     });
   });
 
-  it('elimina el carrito creado', () => {
-    cy.requestConToken({ method: 'DELETE', url: `/carts/${carrito.id}` }).then(({ status }) => {
+  it('consulta el carrito creado antes de eliminarlo', () => {
+    cy.requestConToken({ method: 'GET', url: `/carts/${carrito.id}` }).then(({ status, body }) => {
       expect(status).to.eq(200);
+      validarEsquema(body, esquemas.carrito);
+      expect(body.id).to.eq(carrito.id);
+    });
+  });
+
+  it('elimina el carrito creado', () => {
+    cy.requestConToken({ method: 'DELETE', url: `/carts/${carrito.id}` }).then(({ status, body }) => {
+      respuestaEliminacion = body;
+
+      expect(status).to.eq(200);
+    });
+  });
+
+  it('el carrito eliminado deja de estar disponible', () => {
+    cy.requestConToken({ method: 'GET', url: `/carts/${carrito.id}` }).then(({ status, body }) => {
+      expect(status).to.eq(200);
+      expect(body).to.deep.equal(respuestaEliminacion);
     });
   });
 });
