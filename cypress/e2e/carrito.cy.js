@@ -1,12 +1,17 @@
-import { CARRITO, PRODUCTO, validarEsquema } from '../support/esquemas';
+import { validarEsquema } from '../support/validaciones';
 
 const USUARIO_ID = 2;
 
 describe('Carrito', () => {
+  let esquemas;
   let productos;
   let carrito;
 
   before(() => {
+    cy.fixture('esquemas').then((contenido) => {
+      esquemas = contenido;
+    });
+
     cy.requestConToken({ method: 'GET', url: '/products' }).then(({ status, body }) => {
       expect(status).to.eq(200);
       expect(body).to.be.an('array').and.not.be.empty;
@@ -29,10 +34,10 @@ describe('Carrito', () => {
       carrito = body;
 
       expect(status).to.eq(201);
-      validarEsquema(body, CARRITO);
+      validarEsquema(body, esquemas.carrito);
       expect(body.userId).to.eq(USUARIO_ID);
       expect(body.products).to.have.length(3);
-      body.products.forEach((producto) => validarEsquema(producto, PRODUCTO));
+      body.products.forEach((producto) => validarEsquema(producto, esquemas.producto));
     });
   });
 
@@ -49,10 +54,10 @@ describe('Carrito', () => {
       carrito = body;
 
       expect(status).to.eq(200);
-      validarEsquema(body, CARRITO);
+      validarEsquema(body, esquemas.carrito);
       expect(body.id).to.eq(anterior.id);
       expect(body.products).to.have.length(4);
-      body.products.forEach((producto) => validarEsquema(producto, PRODUCTO));
+      body.products.forEach((producto) => validarEsquema(producto, esquemas.producto));
     });
   });
 
